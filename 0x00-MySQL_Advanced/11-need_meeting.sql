@@ -1,8 +1,10 @@
 -- Script that creates a view that lists
 -- all students that have a score
 
+DROP VIEW IF EXISTS need_meeting;
+
 CREATE VIEW need_meeting
 	AS SELECT name FROM students
 	WHERE score < 80 AND 
-		(last_meeting IS NULL 
-			OR (YEAR(last_meeting) - YEAR(CURDATE())) > 1);
+	(last_meeting IS NULL 
+	OR (last_meeting < DATE_SUB(CURDATE(), INTERVAL 1 MONTH)));
