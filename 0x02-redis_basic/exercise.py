@@ -5,7 +5,7 @@ Redis Client Creation
 """
 
 import redis
-from typing import Union
+from typing import Union, Optional, Callable, Any
 from uuid import uuid4
 
 
@@ -23,7 +23,6 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
-
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         Stores a data value into a redis key
@@ -36,5 +35,23 @@ class Cache:
 
         return rand_key
 
+    def get(self, key: str, fn: Optional[Callable[[str], Any]] = None) -> Any:
+        value = self._redis.get(key)
 
+        if value is None:
+            return None
 
+        return fn(value) if fn else value
+
+    def get_str(key: str) -> Optional[str]:
+        """
+        Returns a string of value passed
+        """
+        return self.get(key, fn=lambda d: d.decode("utf-8") if d else None)
+
+    def get_int(key: str) -> Optional[int]:
+        """
+        Returns an int of value passed
+        """
+
+        return self.get(key, fn=lambda d: int(d) if d else None)
