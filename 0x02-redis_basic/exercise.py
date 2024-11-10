@@ -20,7 +20,7 @@ class Cache:
         and flush the instance
         """
 
-        self._redis: redis.Redis = redis.Redis()
+        self._redis = redis.Redis()
         self._redis.flushdb()
 
 
