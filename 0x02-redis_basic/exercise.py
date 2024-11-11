@@ -10,7 +10,11 @@ from typing import Union, Optional, Callable, Any
 from uuid import uuid4
 
 
-def replay(method: Callable) -> Any:
+def replay(method: Callable) -> None:
+    """
+    replay: retrieves all inputs and outputs
+    of called by store method of Cache Class
+    """
     key = method.__qualname__
 
     inputs = method.__self__._redis.lrange(f"{key}:inputs", 0, -1)
