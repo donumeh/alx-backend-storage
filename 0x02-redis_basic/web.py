@@ -4,7 +4,6 @@
 Implementing an expiring web cache and tracker
 """
 
-from datetime import timedelta
 import functools
 import requests
 import redis
@@ -31,7 +30,7 @@ def count_and_store(method: Callable) -> Callable:
 
         result = method(url, *args, **kwargs)
 
-        redis_client.setex(url, timedelta(seconds=10), result)
+        redis_client.setex(url, 10, result)
 
         return result
 
@@ -58,7 +57,7 @@ if __name__ == "__main__":
 
     import time
 
-    url = "http://slowwly.robertomurray.co.uk"
+    url = "http://google.com"
 
     for _ in range(5):
         get_page(url)
