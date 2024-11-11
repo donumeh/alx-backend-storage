@@ -10,6 +10,20 @@ from typing import Union, Optional, Callable, Any
 from uuid import uuid4
 
 
+def replay(method: Callable) -> Any:
+    key = method.__qualname__
+
+    inputs = method.__self__._redis.lrange(f"{key}:inputs", 0, -1)
+    outputs = method.__self__._redis.lrange(f"{key}:outputs", 0, -1)
+
+    call_count = len(inputs)
+
+    print(f"{key} was called {call_count} times:")
+
+    for input_data, output_data in zip(inputs, outputs):
+        print(f"{key}(*{input_data.decode()}) -> {output_data.decode()}")
+
+
 def call_history(method: Callable) -> Callable:
     """
     call_history: records the input
