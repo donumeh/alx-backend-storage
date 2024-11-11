@@ -99,6 +99,9 @@ class Cache:
         return rand_key
 
     def get(self, key: str, fn: Optional[Callable[[str], Any]] = None) -> Any:
+        """
+        get: gets the value of a key from a redis server
+        """
         value = self._redis.get(key)
 
         if value is None:
