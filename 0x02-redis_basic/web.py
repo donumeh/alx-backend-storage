@@ -23,13 +23,13 @@ def count_and_store(method: Callable) -> Callable:
     @functools.wraps(method)
     def wrapper(url: str, *args, **kwargs):
 
-        redis_client.incr(f"count:{url}")
-
         cached_content = redis_client.get(url)
 
         if cached_content:
+            
+            redis_client.incr(f"count:{url}")
             redis_client.expire(url, timedelta(seconds=10))
-            return cached_content.decode('utf-8')
+            return cached_content.decode("utf-8")
 
         result = method(url, *args, **kwargs)
         redis_client.setex(url, timedelta(seconds=10), result)
@@ -56,7 +56,6 @@ def get_page(url: str) -> str:
 
 
 if __name__ == "__main__":
-
     import time
 
     url = "http://google.com"
@@ -65,6 +64,8 @@ if __name__ == "__main__":
         get_page(url)
         key = f"count:{url}"
 
-        print(f"Saved value{i}: {redis_client.get(key).decode('utf-8')} \
-                value: {redis_client.get(url).decode('utf-8')[:20]}")
+        print(
+            f"Saved value{i}: {redis_client.get(key).decode('utf-8')} \
+                value: {redis_client.get(url).decode('utf-8')[:20]}"
+        )
         time.sleep(2)
