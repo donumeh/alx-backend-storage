@@ -10,6 +10,29 @@ from typing import Union, Optional, Callable, Any
 from uuid import uuid4
 
 
+def call_history(method: Callable) -> Callable:
+    """
+    call_history: records the input
+    and output of a class method
+    """
+
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        """
+        Wrapper: stores the input and output
+        of a method into a list
+        """
+        key = method.__qualname__
+        self._redis.rpush(f"{key}:inputs", str(args))
+
+        output = method(self, *args, **kwargs)
+        self._redis.rpush(f"{key}:outputs", str(output))
+
+        return output
+
+    return wrapper
+
+
 def count_calls(method: Callable) -> Callable:
     """
     Decorator to count calls to methods of the Cache class
@@ -44,6 +67,7 @@ class Cache:
         self._redis.flushdb()
 
     @count_calls
+    @call_history
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         Stores a data value into a redis key
@@ -52,7 +76,7 @@ class Cache:
         """
 
         rand_key: str = str(uuid4())
-        self._redis.set(rand_key, data)
+        self._redis.set(rand_key, str(data))
 
         return rand_key
 
