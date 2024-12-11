@@ -1,2 +1,6 @@
 // lists all documents with name="ALX"
-db.school.find({name: 'ALX'})
+var allDoc = db.school.find({name: 'ALX'});
+
+while(allDoc.hasNext()) {
+	print(tojson(allDoc.next()));
+}
