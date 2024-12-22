@@ -15,6 +15,5 @@ def insert_school(mongo_collection, **kwargs):
 
     Return: id of inserted content
     """
-    mongo_collection.delete_many({})
     return mongo_collection.insert_one(kwargs).inserted_id
     
