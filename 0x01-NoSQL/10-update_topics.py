@@ -17,6 +17,6 @@ def update_topics(mongo_collection, name, topics):
     """
     item_topics = mongo_collection.find_one({"name": name})
 
-    if item_topics != topics:
+    if item_topics.get('topics') != topics:
         mongo_collection.update_one({"name":name}, {"$set": {"topics": topics}})
 
