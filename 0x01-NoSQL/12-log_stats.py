@@ -18,6 +18,7 @@ def main():
     method = ["GET", "POST", "PUT", "PATCH", "DELETE"]
 
     print("{} logs".format(len(list(nginx.find()))))
+    print("Methods:")
 
     for mthd in method:
         print("\tmethod {}: {}"
