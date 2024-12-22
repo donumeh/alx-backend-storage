@@ -1,4 +1,4 @@
-#!/usr/usr/bin/env python3
+#!/usr/bin/env python3
 
 """
 Python function that returns all stuents sorted by average score
@@ -16,16 +16,18 @@ def top_students(mongo_collection):
         list of all students sorted by average score
     """
 
-    return list(mongo_collection.aggregate(
+    return list(
+        mongo_collection.aggregate(
             [
                 {"$unwind": "$topics"},
-                {"$group":
-                 {"_id": "$_id",
-                  "name": {"$first": "$name"},
-                  "averageScore": {"$avg": "$topics.score"}
-                    }},
-
-                 {"$sort": {"averageScore": -1}}
-                ]
-            ))
-    
+                {
+                    "$group": {
+                        "_id": "$_id",
+                        "name": {"$first": "$name"},
+                        "averageScore": {"$avg": "$topics.score"},
+                    }
+                },
+                {"$sort": {"averageScore": -1}},
+            ]
+        )
+    )
