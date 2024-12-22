@@ -1,2 +1,2 @@
 // Listall documents with nmae starting by ALX
-db.school.find({name: {"$regex": "^ALX"}})
+db.school.find({name: {"$regex": "^Holberton"}})
